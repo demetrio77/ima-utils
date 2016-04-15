@@ -1,8 +1,8 @@
 {
-    "name": "demetrio77/yii2-smart",
-    "description": "Smart-admin feauters",
-    "keywords": ["extension", "yii", "admin", "panel"],
-    "type": "yii2-extension",
+    "name": "demetrio77/ima-utils",
+    "description": "IMA Cherepovets local scripts",
+    "keywords": [""],
+    "type": "php-scripts",
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -13,11 +13,10 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": ">=2.0.6"
     },
     "autoload": {
         "psr-4": {
-            "demetrio77\\smartadmin\\": ""
+            "demetrio77\\imautils\\": ""
         }
     }
 }
