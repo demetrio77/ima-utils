@@ -5,7 +5,6 @@ namespace demetrio77\imautils\ldap;
 trait LdapImaTrait {
 	
 	public $hosts;
-	public $port=389;
 	public $protocol=3;
 	public $timeout=3000;	
 	public $baseDn;
@@ -20,7 +19,6 @@ trait LdapImaTrait {
 	protected function init( $params = [])
 	{
 		if (isset($params['hosts']))    $this->hosts = $params['hosts'];
-		if (isset($params['port']))     $this->port = $params['port'];
 		if (isset($params['protocol'])) $this->protocol = $params['protocol'];
 		if (isset($params['timeout']))  $this->timeout = $params['timeout'];
 		if (isset($params['baseDn']))   $this->baseDn = $params['baseDn'];
@@ -28,18 +26,41 @@ trait LdapImaTrait {
 		if (isset($params['groupsDn'])) $this->groupsDn = $params['groupsDn'];
 		if (isset($params['group']))    $this->group = $params['group'];
 		
+		$this->initialize();
 		return $this;
+	}
+	
+	protected function initialize()
+	{
+		$expl = explode(';', $this->hosts);
+		$this->hosts = [];
+		foreach ($expl as $hostUrl) {
+			$result = preg_match_all('/(ldap|ldaps)\:\/\/([\w\.\-]*)(\:(\d+))?/', $hostUrl, $matches);
+			if($result) {
+				$host = [];
+				if (isset($matches[1][0]) && $matches[1][0]) {
+					$host['protocol'] = $matches[1][0];
+					$host['port'] = $host['protocol']=='ldaps' ? 636 :  ($host['protocol']=='ldap' ? 389 : 0);
+				}
+				if (isset($matches[2][0]) && $matches[2][0]) {
+					$host['hostname'] = $matches[2][0];
+				}
+				if (isset($matches[4][0]) && $matches[4][0]) {
+					$host['port'] = $matches[4][0];
+				}
+				$this->hosts[] = $host;
+			}
+		}
+		
+		$this->usersDn = explode(';', $this->usersDn);
 	}
 	
 	protected function connect()
 	{
-		if (!is_array($this->hosts))    $this->hosts = [$this->hosts];
-		if (!is_array($this->usersDn))  $this->usersDn = [$this->usersDn];
-		
 		foreach ($this->hosts as $host) {
 			$socket = fsockopen($host['hostname'], $host['port'], $errno, $errstr, 100);
 			if ($socket) {
-				$this->link = ldap_connect( ($host['ssl']?'ldaps':'ldap').'://'.$host['hostname'].'/');
+				$this->link = ldap_connect( $host['protocol'].'://'.$host['hostname'].'/');
 				$this->connectedHost = $host['hostname'];
 				break;
 			}
