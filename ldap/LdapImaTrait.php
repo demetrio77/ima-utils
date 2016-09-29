@@ -80,7 +80,7 @@ trait LdapImaTrait {
 		if (!$uid) return false;
 		try {
 			foreach ($this->usersDn as $usersDn) {
-				$userExists =  ldap_bind($this->link, "uid=$uid,$usersDn,$this->baseDn", $password);
+				$userExists =  @ldap_bind($this->link, "uid=$uid,$usersDn,$this->baseDn", $password);
 				if ($userExists) {
 					$this->acceptedUsersDn = $usersDn;
 					return true;
@@ -88,7 +88,7 @@ trait LdapImaTrait {
 			}
 			return $userExists;
 		}
-		catch (\Exception $e) {
+		catch (\Exception $e) {echo $usersDn;echo $e;exit();
 			return false;
 		}
 		return false;		
