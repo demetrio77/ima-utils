@@ -12,6 +12,7 @@ class ImaLdap extends Object
 	public function init()
 	{
 		parent::init();
+		$this->initialize();
 		$this->connect();
 	}
 }
