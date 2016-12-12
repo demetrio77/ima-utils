@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "graylog2/gelf-php" : "^1.5"
     },
     "autoload": {
         "psr-4": {
