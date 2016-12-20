@@ -8,6 +8,6 @@ class EnvHelper
 {	
 	public static function get($key, $defaultValue=false)
 	{
-		return trim(ArrayHelper::getValue($_ENV, $key, $defaultValue));
+		return trim(ArrayHelper::getValue($_ENV, $key, $defaultValue), '"');
 	}
 }
