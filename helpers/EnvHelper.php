@@ -10,4 +10,9 @@ class EnvHelper
 	{
 		return trim(ArrayHelper::getValue($_ENV, $key, $defaultValue), '"');
 	}
+	
+	public static function isset($key)
+	{
+	    return isset($_ENV[$key]);
+	}
 }
